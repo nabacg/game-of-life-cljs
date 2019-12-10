@@ -28,23 +28,25 @@
                          "column black"
                          "column")}])
             (range x-dim))])
-        (range y-dim))]
-
-  )
+        (range y-dim))])
 
 (defn generation-timer []
   (let [timer-state (r/atom 0)]
     (fn []
       (when  (> @timer-state 0)
-        (js/setTimeout #(swap! timer-state (fn [v]
-                                             (if (> v 0)
-                                               (do
-                                                 (swap! game-state game/game-step)
-                                                 (inc v)) v))) 1000))
-      [:div.ui.container
+        (js/setTimeout
+         #(swap! timer-state
+                 (fn [v]
+                   (if (> v 0)
+                     (do
+                       (swap! game-state game/game-step)
+                       (inc v)) v)))
+         1000))
+      [:div.menu
        [:button.ui.button {:on-click #(swap! timer-state (fn [i] (if (= i 0) 1 0)))}
         (if (= @timer-state 0) "Start timer" "Stop timer")]
-       [:div.ui (str "Iterations: ") @timer-state]])))
+       [:div.right.aligned
+        [:label.aligned (str "Iterations:") @timer-state]]])))
 
 (defn home-page []
   [:div.ui.text.container
@@ -54,6 +56,7 @@
      "Next Generation"]
     [:button.ui.button {:on-click #(reset! game-state (init-board board-dims))}
      "Reset grid"]
+
     [generation-timer]]
    [:div.ui.divider]
    [:div.ui.container
