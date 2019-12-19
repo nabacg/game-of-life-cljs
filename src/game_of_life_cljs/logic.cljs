@@ -5,7 +5,7 @@
        (remove (fn [[_ c]] (= c \space)))
        (into {})))
 
-(defn render-board [[grid-size-y grid-size-x] state-map]
+(defn render-board [{[grid-size-y grid-size-x] :grid-dims state-map :board-state}]
   (->> (range grid-size-y)
        (map (fn [y] (->> (range grid-size-x)
                          (map (fn [x] (get state-map [y x] " ")))
@@ -26,15 +26,18 @@
 ;(= in (->> (parse-board in) (render-board [6 6])))
 
 (defn neighbour-coords [[grid-size-y grid-size-x] [start-y start-x]]
-  (let [range-fn #(range (dec %) (+ % 2))]
-    (for [x (range-fn start-x)
-          y (range-fn start-y)
-          :when (and (>= x 0)
-                     (>= y 0)
-                     (< x grid-size-x)
-                     (< y grid-size-y)
-                     (not= [x y] [start-x start-y]))]
-      [y x])))
+  (if (or (>= start-y grid-size-y)
+          (>= start-x grid-size-x))
+    []
+    (let [range-fn #(range (dec %) (+ % 2))]
+      (for [x (range-fn start-x)
+            y (range-fn start-y)
+            :when (and (>= x 0)
+                       (>= y 0)
+                       (< x grid-size-x)
+                       (< y grid-size-y)
+                       (not= [x y] [start-x start-y]))]
+        [y x]))))
 
 (defn live-neighbours [board-state grid-size coords]
   (->> (neighbour-coords grid-size coords)

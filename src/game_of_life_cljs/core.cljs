@@ -50,7 +50,7 @@
 
 (defn home-page []
   [:div.ui.text.container
-   [:h2 "Game of Life"]
+   [:h1 "Game of Life"]
    [:div.ui.menu
     [:button.ui.button {:on-click #(swap! game-state game/game-step)}
      "Next Generation"]
