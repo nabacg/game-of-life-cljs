@@ -1,4 +1,11 @@
 
+# Game of Life 
+
+ClojureScript and Reagent built page visualising steps in [Conway's Game of Life](https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life)
+
+## Demo
+<img src="https://github.com/nabacg/game-of-life-cljs/blob/master/images/demo-ld.gif?raw=true" width="240" height="360" />
+
 ### Development mode
 To start the Figwheel compiler, navigate to the project folder and run the following command in the terminal:
 
