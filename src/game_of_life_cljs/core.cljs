@@ -15,7 +15,7 @@
 ;; -------------------------
 ;; Views
 
-(defn board-view [game-state [y-dim x-dim]]
+(defn board-view [game-state [x-dim y-dim]]
   [:div.ui.grid.padded
    (map (fn [y]
           [:div.row
@@ -29,6 +29,15 @@
                          "column")}])
             (range x-dim))])
         (range y-dim))])
+
+(defn slider [index value min max]
+  [:input {:type "range" :value value :min min :max max
+           :style {:width "100%"}
+           :on-change (fn [e]
+                        (swap! game-state assoc-in 
+                        [:grid-dims index] (.. e -target -value))
+                        )}])
+
 
 (defn generation-timer []
   (let [timer-state (r/atom 0)]
@@ -54,10 +63,23 @@
    [:div.ui.menu
     [:button.ui.button {:on-click #(swap! game-state game/game-step)}
      "Next Generation"]
-    [:button.ui.button {:on-click #(reset! game-state (init-board board-dims))}
-     "Reset grid"]
-
+    [:button.ui.button {:on-click #(reset! game-state (game/random-board @game-state))}
+     "Reset grid"
+    ]
     [generation-timer]]
+      
+   [:div.ui.divider]
+   [:div.ui.container
+    (let [[width height] (:grid-dims @game-state)]
+      [:div 
+      [:div 
+       "Grid width " (str width)
+       [slider 0 width 10 100]]
+      [:div 
+       "Grid heigth " (str height)
+       [slider 1 height 10 100]]])
+   ] 
+
    [:div.ui.divider]
    [:div.ui.container
     (let [{:keys [grid-dims board-state]} @game-state]
